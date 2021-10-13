@@ -15,7 +15,7 @@ function asset($file){
 }
 
 function url($url){
-    return trim(BASE_URL , '/ ') . '/' . trim($url, '/ ');
+    return trim(BASE_URL , '/ ') . '/' . trim($url, '/ ') . '.php';
 }
 
 function dd($var){
