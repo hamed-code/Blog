@@ -10,6 +10,6 @@
         <a href="<?= url('admin/category') ?>">category</a>
     </section>
     <section class="sidebar-link">
-        <a href="">post</a>
+        <a href="<?= url('admin/post') ?>">post</a>
     </section>
 </section>
