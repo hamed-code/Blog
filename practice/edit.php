@@ -1,7 +1,7 @@
 <?php
 
-    require_once '../../functions/helpers.php';
-    require_once '../../functions/pdo_connection.php';
+    require '../functions/helpers.php';
+    require '../functions/pdo_connection.php';
 
     global $pdo;
 
@@ -9,29 +9,27 @@
         redirect('admin/post');
     }
 
-    //check for exist post id
-
-    $query = "SELECT * FROM php_project.posts WHERE id = ?";
-    $statement = $pdo->prepare($query);
-    $statement->execute([$_GET['post_id']]);
-    $post = $statement->fetch();
+    $query = "SELECT * FROM `posts` WHERE id = ?";
+    $statemetn = $pdo->prepare($query);
+    $statemetn->execute([$_GET['post_id']]);
+    $posts = $statemetn->fetch();
     if($post === false){
         redirect('admin/post');
     }
 
     if (isset($_POST['title']) && $_POST['title'] !== '' && isset($_POST['cat_id']) && $_POST['cat_id'] !== '' && isset($_POST['body']) && $_POST['body'] !== ''){
 
-        $query = "SELECT * FROM php_project.categories WHERE id = ?";
-        $statement = $pdo->prepare($query);
-        $statement->execute([$_POST['cat_id']]);
-        $category = $statement->fetch();
+        $query = "SELECT * FROM `categories` WHERE cat_id = ?";
+        $statemetn = $pdo->prepare($query);
+        $statemetn->execute($_POST['cat_id']);
+        $category = $statemetn->fetch();
 
         if(isset($_FILES['image']) && $_FILES['image']['name'] !== ''){
 
             $allowedMimes = ['png', 'jpeg', 'jpg', 'gif'];
 
-            $imageMime = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
-            if(!in_array($imageMime, $allowedMimes)){
+            $imgageMime = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
+            if(!in_array($imgageMime, $allowedMimes)){
                 redirect('admin/post');
             }
 
@@ -39,15 +37,14 @@
             if(file_exists($basePath . $post->image)){
                 unlink($basePath . $post->image);
             }
-            $image = '/assets/images/posts/' . date("Y_m_d_H_i_s") . '.' . $imageMime;
+            $image = 'assets/images/posts/' . date("Y-m-d-H-i-s") . '.' . $imgageMime;
             $image_upload = move_uploaded_file($_FILES['image']['tmp_name'], $basePath . $image);
 
             if($category !== false && $image_upload !== false){
-                
-                $query = "UPDATE php_project.posts SET title = ?, cat_id = ?, body = ?, image = ?, updated_at = now() WHERE id = ? ;";
-                $statement = $pdo->prepare($query);
-                $statement->execute([$_POST['title'], $_POST['cat_id'], $_POST['body'], $image, $_GET['post_id']]);
-                
+
+                $query = "UPDATE `posts` SET title = ?, cat_id = ?, body = ?, image = ?, updated_at = now() WHERE id = ? ;";
+                $statemetn = $pdo->prepare($query);
+                $statemetn->execute([$_POST['title'], $_POST['cat_id'], $_POST['body'], $image, $_GET['post_id']]);
             }
         }
         else{
@@ -55,15 +52,17 @@
                 $query = "UPDATE php_project.posts SET title = ?, cat_id = ?, body = ?, updated_at = now() WHERE id = ?;";
                 $statement = $pdo->prepare($query);
                 $statement->execute([$_POST['title'], $_POST['cat_id'], $_POST['body'], $_GET['post_id']]);
-            }
 
+            }
         }
         redirect('admin/post');
+
     }
 
 
-
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -78,48 +77,40 @@
 <body>
     <section id="app">
 
-    <?php
-        require_once '../layouts/top-nav.php';
-    ?>
 
         <section class="container-fluid">
             <section class="row">
                 <section class="col-md-2 p-0">
-                    <?php
-                        require_once '../layouts/sidebar.php';
-                    ?>
                 </section>
                 <section class="col-md-10 pt-3">
 
-                    <form action="<?= url('admin/post/edit.php?post_id=' . $_GET['post_id']) ?>" method="post" enctype="multipart/form-data">
+                    <form action="<?= url('admin/post/edit.php?post_id' . $_GET['post_id']) ?>" method="post" enctype="multipart/form-data">
                         <section class="form-group">
                             <label for="title">Title</label>
-                            <input type="text" class="form-control" name="title" id="title" value="<?= $post->title ?>">
+                            <input type="text" class="form-control" name="title" id="title" placeholder="title ..." value="w">
                         </section>
                         <section class="form-group">
                             <label for="image">Image</label>
                             <input type="file" class="form-control" name="image" id="image">
-                            <img src="<?= asset($post->image) ?>" alt="" class="mt-3" width="100" height="100">
                         </section>
                         <section class="form-group">
                             <label for="cat_id">Category</label>
                             <select class="form-control" name="cat_id" id="cat_id">
                                 <?php
-                                global $pdo;
-                                $query = "SELECT * FROM php_project.categories";
-                                $statement = $pdo->prepare($query);
-                                $statement->execute();
-                                $categories = $statement->fetchAll();
-                                // dd($categories);
-                                foreach ($categories as $category) {
+                                    global $pdo;
+                                    $query = "SELECT * FROM `categories`";
+                                    $statemetn = $pdo->prepare($query);
+                                    $statemetn->execute();
+                                    $categories = $statemetn->fetchAll();
+                                    foreach ($categories as $category){
                                 ?>
-                            <option value="<?= $category->id ?>" <?php if($category->id == $post->cat_id) echo 'selected' ?>><?= $category->name ?></option>
-                            <?php } ?>
+                                <option value="<?= $category->id ?>" <?php if($category->id == $post->cat_id) echo 'selected' ?>><?= $category->name ?></option>
+                                <?php } ?>
                         </select>
                         </section>
                         <section class="form-group">
                             <label for="body">Body</label>
-                            <textarea class="form-control" name="body" id="body" rows="5"><?= $post->body ?></textarea>
+                            <textarea class="form-control" name="body" id="body" rows="5" placeholder="body ...">sss</textarea>
                         </section>
                         <section class="form-group">
                             <button type="submit" class="btn btn-primary">Update</button>

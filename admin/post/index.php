@@ -32,7 +32,7 @@
 
                 <section class="mb-2 d-flex justify-content-between align-items-center">
                     <h2 class="h4">Articles</h2>
-                    <a href="create.php" class="btn btn-sm btn-success">Create</a>
+                    <a href="<?= url('admin/post/create.php') ?>" class="btn btn-sm btn-success">Create</a>
                 </section>
 
                 <section class="table-responsive">
@@ -61,7 +61,7 @@
                             ?>
                             <tr>
                                 <td><?= $post->id ?></td>
-                                <td><img style="width: 90px;" src=""></td>
+                                <td><img style="width: 90px;" src="<?= asset($post->image) ?>"></td>
                                 <td><?= $post->title ?></td>
                                 <td><?= $post->category_name ?></td>
                                 <td><?= substr($post->body, 0,30) . " ..." ?></td>
@@ -75,9 +75,9 @@
                                 </td>
 
                                 <td>
-                                    <a href="" class="btn btn-warning btn-sm">Change status</a>
-                                    <a href="<?= url('admin/post/edit.php?cat_id=') . $post->id ?>" class="btn btn-info btn-sm">Edit</a>
-                                    <a href="<?= url('admin/post/delete.php?cat_id=') . $post->id ?>" class="btn btn-danger btn-sm">Delete</a>
+                                    <a href="<?= url('admin/post/change-status.php?post_id=' . $post->id) ?>" class="btn btn-warning btn-sm">Change status</a>
+                                    <a href="<?= url('admin/post/edit.php?post_id=' . $post->id) ?>" class="btn btn-info btn-sm">Edit</a>
+                                    <a href="<?= url('admin/post/delete.php?post_id=') . $post->id ?>" class="btn btn-danger btn-sm">Delete</a>
                                 </td>
                             </tr>
                             
