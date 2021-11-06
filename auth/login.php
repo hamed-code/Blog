@@ -7,18 +7,18 @@
 
         unset($_SESSION['user']);
     }
-    
+
     $error = "";
-    if ( isset($_POST['email']) && $_POST['email'] !== ''
+    if (isset($_POST['email']) && $_POST['email'] !== ''
     && isset($_POST['password']) && $_POST['password'] !== '') {
 
-        global $pdo;
+        global $pdo;    
         $query = "SELECT * FROM php_project.users WHERE email = ?";
         $statement = $pdo->prepare($query);
         $statement->execute([$_POST['email']]);
         $user = $statement->fetch();
 
-        if ($user !== false) {
+        if ($user !== false) {          //if find a user 
 
             if(password_verify($_POST['password'], $user->password)){
                 $_SESSION['user'] = $user->email;
@@ -75,7 +75,7 @@
                     </section>
                     <section class="mt-4 mb-2 d-flex justify-content-between">
                         <input type="submit" class="btn btn-success btn-sm" value="login">
-                        <a class="" href="">register</a>
+                        <a class="" href="<?= url('auth/register.php') ?>">register</a>
                     </section>
                 </form>
             </section>
