@@ -30,7 +30,7 @@ session_start();
             ?>
 
                 <li class="nav-item ">
-                    <a class="nav-link " href=""><?= $category->name ?></a>
+                    <a class="nav-link " href="<?= url('category.php?cat_id=' . $category->id) ?>"><?= $category->name ?></a>
                 </li>
 
             <?php } ?>
